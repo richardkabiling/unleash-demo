@@ -1,0 +1,28 @@
+version: '3.3'
+services:
+  unleash_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: unleash_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: unleash_db
+  unleash:
+    image: unleashorg/unleash-server
+    depends_on:
+      - unleash_db
+    environment:
+      DATABASE_HOST: unleash_db
+      DATABASE_NAME: unleash_db
+      DATABASE_USERNAME: unleash_user
+      DATABASE_PASSWORD: password
+      DATABASE_SSL: false
+      HTTP_PORT: 80
+    ports:
+      - "8081:80"
+  service:
+    build: .
+    depends_on:
+      - unleash
+    ports:
+      - "8080:8080"
